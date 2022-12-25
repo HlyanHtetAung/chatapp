@@ -1,0 +1,214 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+@import "./scssVariables.scss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Roboto";
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+.dark {
+  background-color: $dark-background-color;
+}
+
+.light {
+  background-color: $light-background-color;
+}
+
+// Sign in & Sign Out Form
+.form_container {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  &.light {
+    background-color: $light-background-color;
+    .form_wrapper {
+      padding: 30px;
+      border-radius: 10px;
+      background-color: $light-form-color;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      width: 400px;
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      .form_header_wrapper {
+        display: flex;
+        align-items: center;
+
+        justify-content: space-between;
+        .form_header {
+          color: $hilight-color;
+          font-size: 25px;
+          font-weight: 700;
+        }
+      }
+      .form_header_icon {
+        color: $hilight-color;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        .form_input_container {
+          position: relative;
+          height: 40px;
+          span {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            color: $normal-font-color;
+            pointer-events: none;
+            font-size: 16px;
+            font-weight: 500;
+          }
+          input {
+            width: 100%;
+            height: 40px;
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid $hilight-color;
+            outline: none;
+            color: $normal-font-color;
+            font-size: 16px;
+            &:focus ~ span,
+            &:valid ~ span {
+              transition: 0.3s ease;
+              top: -17px;
+              color: $hilight-color;
+            }
+          }
+        }
+        button {
+          margin-top: 20px;
+          background-color: $hilight-color;
+          color: $normal-font-color;
+          border: none;
+          height: 40px;
+          font-size: 18px;
+          color: white;
+          cursor: pointer;
+          border-radius: 5px;
+        }
+      }
+
+      p {
+        text-align: center;
+        color: $normal-font-color;
+        span {
+          color: black;
+          text-decoration: underline;
+          cursor: pointer;
+
+          &:hover {
+            color: $dark-background-color;
+          }
+        }
+      }
+    }
+  }
+
+  &.dark {
+    background-color: $dark-background-color;
+    .form_wrapper {
+      padding: 30px;
+      border-radius: 10px;
+      background-color: $dark-form-color;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      width: 400px;
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      .form_header_wrapper {
+        display: flex;
+        align-items: center;
+
+        justify-content: space-between;
+        .form_header {
+          color: $hilight-color;
+          font-size: 25px;
+          font-weight: 700;
+        }
+      }
+      .form_header_icon {
+        color: $hilight-color;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        .form_input_container {
+          position: relative;
+          height: 40px;
+          span {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            color: $normal-font-color;
+            pointer-events: none;
+            font-size: 16px;
+            font-weight: 500;
+          }
+          input {
+            width: 100%;
+            height: 40px;
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid $hilight-color;
+            outline: none;
+            color: $normal-font-color;
+            font-size: 16px;
+            &:focus ~ span,
+            &:valid ~ span {
+              transition: 0.3s ease;
+              top: -17px;
+              color: $hilight-color;
+            }
+          }
+        }
+        button {
+          margin-top: 20px;
+          background-color: $hilight-color;
+          color: $normal-font-color;
+          border: none;
+          height: 40px;
+          font-size: 18px;
+          color: white;
+          cursor: pointer;
+          border-radius: 5px;
+        }
+      }
+
+      p {
+        text-align: center;
+        color: $normal-font-color;
+        span {
+          color: white;
+          text-decoration: underline;
+          cursor: pointer;
+
+          &:hover {
+            color: $dark-background-color;
+          }
+        }
+      }
+    }
+  }
+}

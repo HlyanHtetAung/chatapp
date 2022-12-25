@@ -1,0 +1,31 @@
+@import "../../scssVariables.scss";
+
+.emoji_container {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: 0.3s ease;
+  height: 0px;
+  &.active {
+    transform: translateY(0px);
+    transition: 0.3s ease;
+    opacity: 1;
+    pointer-events: visible;
+    height: max-content;
+    margin-bottom: 5px;
+  }
+  .emoji_icon {
+    color: $normal-font-color;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+
+    &:hover {
+      color: $hilight-color;
+      transform: translateY(-5px);
+    }
+  }
+}

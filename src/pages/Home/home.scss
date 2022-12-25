@@ -1,0 +1,111 @@
+@import "../../scssVariables.scss";
+.home_container {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  .messages_container {
+    flex: 1;
+    .messages_navbar_wrapper {
+      // box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      // border-bottom: 1px solid $normal-font-color;
+      .message_friend_wrapper {
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 54px;
+        .user_info_wrapper {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 1px solid $normal-font-color;
+          }
+          h3 {
+            font-size: 18px;
+            font-weight: 500;
+            color: $hilight-color;
+          }
+        }
+
+        .message_navbar_icon_wrapper {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          .message_navbar_icon {
+            font-size: 25px;
+            color: $normal-font-color;
+          }
+        }
+      }
+    }
+    .messages_area_container {
+      position: relative;
+      height: calc(100vh - 110px);
+      padding: 0 20px;
+      overflow: scroll;
+
+      .scroll_to_bottom_icon {
+        position: fixed;
+        width: 40px;
+        height: 40px;
+        color: $hilight-color;
+        bottom: 70px;
+        cursor: pointer;
+        z-index: 10000;
+      }
+      h1 {
+        color: $normal-font-color;
+      }
+    }
+
+    .messages_input_container {
+      height: 55px;
+      display: flex;
+      align-items: center;
+      background-color: $light-background-color;
+      input {
+        flex: 1;
+        outline: none;
+        padding-left: 20px;
+        height: 100%;
+        background-color: transparent;
+        border: none;
+        font-size: 20px;
+        font-weight: 400;
+      }
+      .messages_icon_container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-right: 20px;
+        .input_container_icon {
+          font-size: 30px;
+          color: $normal-font-color;
+          cursor: pointer;
+        }
+      }
+      button {
+        height: 100%;
+        padding: 0 40px;
+        border: none;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: 700;
+        background-color: $hilight-color;
+        color: white;
+      }
+    }
+    &.dark {
+      background-color: $dark-form-color;
+    }
+
+    &.light {
+      background-color: whitesmoke;
+    }
+  }
+}

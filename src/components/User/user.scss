@@ -1,0 +1,66 @@
+@import "../../scssVariables.scss";
+
+@mixin fourEighty {
+  @media screen and (max-width: 480px) {
+    @content;
+  }
+}
+
+.user_container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  @include fourEighty() {
+    &:hover {
+      p {
+        transition: opacity 0.3s ease;
+        opacity: 1;
+        pointer-events: none;
+      }
+    }
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+
+    @include fourEighty() {
+      width: 40px;
+      height: 40px;
+    }
+  }
+  p {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 500;
+    width: 100%;
+    line-height: 20px;
+    color: $normal-font-color;
+
+    @include fourEighty() {
+      position: absolute;
+      width: max-content;
+      left: 90%;
+      background-color: $hilight-color;
+      padding: 10px 3px;
+      border-radius: 9px;
+      color: white;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 999;
+    }
+  }
+
+  &:hover {
+    background-color: whitesmoke;
+    transition: 0.2s ease;
+    p {
+      color: black;
+    }
+  }
+}
