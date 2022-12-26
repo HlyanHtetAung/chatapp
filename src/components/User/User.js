@@ -11,6 +11,7 @@ const User = ({ displayName, usr }) => {
   const { selectedUserFriend } = useSelector((state) => state.selectedFriend);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const createChatDoc = async (chatId) => {
     await setDoc(doc(db, "chats", chatId), {
       messages: [],
@@ -38,10 +39,7 @@ const User = ({ displayName, usr }) => {
 
   return (
     <div className="user_container" onClick={selectUserHandle}>
-      <img
-        src="https://kpopping.com/documents/9b/0/1440/220731-BLACKPINK-Lisa-Instagram-Update-documents-1.jpeg?v=1301c"
-        alt=""
-      />
+      <img src={usr.photoURL} alt="" />
       <p>{displayName}</p>
     </div>
   );

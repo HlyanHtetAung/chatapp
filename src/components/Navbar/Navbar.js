@@ -13,13 +13,10 @@ import { auth, db } from "../../firebase";
 import { logout } from "../../redux/userSlice";
 import { collection, onSnapshot } from "firebase/firestore";
 import { Link } from "react-router-dom";
-import {
-  setSelectedFriend,
-  unSetSelectedFirend,
-} from "../../redux/selectedFriendSlice";
+import { unSetSelectedFirend } from "../../redux/selectedFriendSlice";
 const Navbar = () => {
   const { theme } = useSelector((state) => state.theme);
-  const { displayName, uid } = useSelector((state) => state.user);
+  const { displayName, uid, photoURL } = useSelector((state) => state.user);
   const [allUsers, setAllUsers] = useState([]);
   const dispatch = useDispatch();
 
@@ -77,10 +74,7 @@ const Navbar = () => {
       <Link to={`/userSettings/${uid}`} style={{ textDecoration: "none" }}>
         <div className="currentUser_container">
           <div className="currentUser_info_wrapper">
-            <img
-              src="https://kpopping.com/documents/91/3/1500/220908-TWICE-Jihyo-documents-1.jpeg?v=b5cfb"
-              alt=""
-            />
+            <img src={photoURL} alt="" />
             <h3>{displayName}</h3>
           </div>
         </div>

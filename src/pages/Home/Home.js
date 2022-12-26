@@ -1,38 +1,27 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { BsCameraVideo, BsEmojiLaughing } from "react-icons/bs";
 import { FiPhoneCall } from "react-icons/fi";
 import { AiFillPicture } from "react-icons/ai";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import "./home.scss";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 import MessagesContainer from "../../components/MessagesContainer/MessagesContainer";
-import { db } from "../../firebase";
+import { db, storage } from "../../firebase";
 import { v4 } from "uuid";
 
 const Home = () => {
   const { theme } = useSelector((state) => state.theme);
   const { selectedUserFriend } = useSelector((state) => state.selectedFriend);
   const [textMessageInput, setTextMessageInput] = useState("");
-  const { uid } = useSelector((state) => state.user);
-
-  const newMessage = {
-    messageId: v4(),
-    messageOwnerId: uid,
-    letterMessage: textMessageInput,
-    photoMessageURL:
-      "https://pyxis.nymag.com/v1/imgs/a17/9f5/627bd5e8a3bf9817ee565cf99388d84c79-chatroom-silo.png",
-    selectedEmoji: [
-      {
-        emojiOwnerId: "",
-        emojiName: "",
-      },
-      {
-        emojiOwnerId: "",
-        emojiName: "",
-      },
-    ],
-  };
+  const [textImage, setTextImage] = useState({
+    textImageFile: "",
+    textImageURL: "",
+  });
+  const { uid, photoURL } = useSelector((state) => state.user);
+  console.log(photoURL);
+  const inputImageRef = useRef();
 
   const addnewMessageHandle = async () => {
     const chatId =
@@ -40,13 +29,110 @@ const Home = () => {
         ? uid + selectedUserFriend.uid
         : selectedUserFriend.uid + uid;
 
-    if (!textMessageInput) {
+    if (!textMessageInput && !textImage.textImageURL) {
       return;
     }
-    await updateDoc(doc(db, "chats", chatId), {
-      messages: arrayUnion(newMessage),
-    });
-    setTextMessageInput("");
+    if (textMessageInput && textImage.textImageURL) {
+      try {
+        const uploadTask = uploadBytesResumable(
+          ref(storage, `chatImages/${chatId + v4()}`),
+          textImage.textImageFile
+        );
+        uploadTask.on("state_changed", () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            const newMessage = {
+              messageId: v4(),
+              messageOwnerId: uid,
+              messageOwnerPhotoURL: photoURL,
+              letterMessage: textMessageInput,
+              photoMessageURL: downloadURL,
+
+              selectedEmoji: [
+                {
+                  emojiOwnerId: "",
+                  emojiName: "",
+                },
+                {
+                  emojiOwnerId: "",
+                  emojiName: "",
+                },
+              ],
+            };
+            await updateDoc(doc(db, "chats", chatId), {
+              messages: arrayUnion(newMessage),
+            });
+          });
+          setTextMessageInput("");
+          setTextImage({ textImageFile: "", textImageURL: "" });
+        });
+      } catch (e) {
+        console.log(e.message);
+      }
+      return;
+    }
+    if (textMessageInput) {
+      const newMessage = {
+        messageId: v4(),
+        messageOwnerId: uid,
+        messageOwnerPhotoURL: photoURL,
+        letterMessage: textMessageInput,
+        photoMessageURL: "",
+        selectedEmoji: [
+          {
+            emojiOwnerId: "",
+            emojiName: "",
+          },
+          {
+            emojiOwnerId: "",
+            emojiName: "",
+          },
+        ],
+      };
+      await updateDoc(doc(db, "chats", chatId), {
+        messages: arrayUnion(newMessage),
+      });
+      setTextMessageInput("");
+      setTextImage({ textImageFile: "", textImageURL: "" });
+      return;
+    }
+
+    if (textImage.textImageURL) {
+      try {
+        const uploadTask = uploadBytesResumable(
+          ref(storage, `chatImages/${chatId + v4()}`),
+          textImage.textImageFile
+        );
+        uploadTask.on("state_changed", () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            const newMessage = {
+              messageId: v4(),
+              messageOwnerId: uid,
+              messageOwnerPhotoURL: photoURL,
+              letterMessage: "",
+              photoMessageURL: downloadURL,
+              selectedEmoji: [
+                {
+                  emojiOwnerId: "",
+                  emojiName: "",
+                },
+                {
+                  emojiOwnerId: "",
+                  emojiName: "",
+                },
+              ],
+            };
+            await updateDoc(doc(db, "chats", chatId), {
+              messages: arrayUnion(newMessage),
+            });
+          });
+          setTextMessageInput("");
+          setTextImage({ textImageFile: "", textImageURL: "" });
+        });
+      } catch (e) {
+        console.log(e.message);
+      }
+      return;
+    }
   };
 
   return (
@@ -58,10 +144,7 @@ const Home = () => {
           <div className={`messages_navbar_wrapper ${theme}`}>
             <div className="message_friend_wrapper">
               <div className="user_info_wrapper">
-                <img
-                  src="https://i.ytimg.com/vi/5StX7v97vwA/maxresdefault.jpg"
-                  alt=""
-                />
+                <img src={selectedUserFriend.photoURL} alt="" />
                 <h3>{selectedUserFriend?.displayName}</h3>
               </div>
               <div className="message_navbar_icon_wrapper">
@@ -79,10 +162,28 @@ const Home = () => {
               onKeyDown={(e) => e.key === "Enter" && addnewMessageHandle()}
             />
             <div className="messages_icon_container">
-              <AiFillPicture className="input_container_icon" />
+              <input
+                type="file"
+                style={{ display: "none" }}
+                ref={inputImageRef}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  const imageURL = URL.createObjectURL(file);
+                  setTextImage({
+                    textImageFile: file,
+                    textImageURL: imageURL,
+                  });
+                }}
+              />
+              <AiFillPicture
+                className="input_container_icon"
+                onClick={() => {
+                  inputImageRef.current.click();
+                }}
+              />
               <BsEmojiLaughing className="input_container_icon" />
             </div>
-            <button>Send</button>
+            <button onClick={addnewMessageHandle}>Send</button>
           </div>
         </div>
       )}

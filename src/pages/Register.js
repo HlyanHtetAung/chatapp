@@ -5,8 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { changeDarkTheme, changeLightTheme } from "../redux/themeSlice";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth, db } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
+
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
 
 const Register = () => {
   const { theme } = useSelector((state) => state.theme);
@@ -17,41 +20,65 @@ const Register = () => {
     email: "",
     password: "",
     displayName: "",
+    imageFileURL: "",
+    imageFile: "",
   };
   const [userInput, setUserInput] = useState(userInputInititalState);
 
   const handleChangeUserInput = (e) => {
     const toChangeObjProperty = e.target.name;
     const value = e.target.value;
-    setUserInput((prev) => ({ ...prev, [toChangeObjProperty]: value }));
+    setUserInput((prev) => ({
+      ...prev,
+      [toChangeObjProperty]: value,
+    }));
+  };
+
+  const handleChangeImageInput = (e) => {
+    const file = e.target.files[0];
+    const fileImageURL = URL.createObjectURL(file);
+    setUserInput((prev) => ({
+      ...prev,
+      imageFileURL: fileImageURL,
+      imageFile: file,
+    }));
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const user = await createUserWithEmailAndPassword(
-        auth,
-        userInput.email,
-        userInput.password
+      const uploadTask = uploadBytesResumable(
+        ref(storage, `profileImages/${userInput.displayName + v4()}`),
+        userInput.imageFile
       );
-      await updateProfile(user.user, {
-        displayName: userInput.displayName,
+      uploadTask.on("state_changed", () => {
+        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          const user = await createUserWithEmailAndPassword(
+            auth,
+            userInput.email,
+            userInput.password
+          );
+          await updateProfile(user.user, {
+            displayName: userInput.displayName,
+            photoURL: downloadURL,
+          });
+          await setDoc(doc(db, "users", user.user.uid), {
+            uid: user.user.uid,
+            displayName: userInput.displayName,
+            email: userInput.email,
+            friends: [],
+            firendRequest: [],
+            photoURL: user.user.photoURL,
+          });
+          setUserInput(userInputInititalState);
+          navigate("/signIn");
+        });
       });
-      await setDoc(doc(db, "users", user.user.uid), {
-        uid: user.user.uid,
-        displayName: userInput.displayName,
-        email: userInput.email,
-        friends: [],
-        firendRequest: [],
-        photoURL: "",
-      });
-      setUserInput(userInputInititalState);
-      navigate("/signIn");
     } catch (err) {
       setError(err.message);
     }
   };
-  
+
   return (
     <div className={`form_container ${theme}`}>
       <div className="form_wrapper">
@@ -70,6 +97,29 @@ const Register = () => {
           )}
         </div>
         <form onSubmit={handleRegister}>
+          <div className="form_image_input_container">
+            <div className="image_container">
+              <input
+                type="file"
+                style={{ display: "none" }}
+                id="file"
+                name="imageFileURL"
+                onChange={handleChangeImageInput}
+              />
+              {userInput.imageFile ? (
+                <label className="image_container" htmlFor="file">
+                  <img src={userInput.imageFileURL} alt="" />
+                </label>
+              ) : (
+                <label
+                  className="image_click_to_add_image_container"
+                  htmlFor="file"
+                >
+                  <p>Profile Image</p>
+                </label>
+              )}
+            </div>
+          </div>
           <div className="form_input_container">
             <input
               type="text"

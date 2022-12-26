@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
 import ImageMessage from "../ImageMessage/ImageMessage";
@@ -7,10 +7,11 @@ import "./message.scss";
 
 const Message = ({ msg }) => {
   const messageRef = useRef();
-  const { uid } = useSelector((state) => state.user);
+  const { uid, photoURL } = useSelector((state) => state.user);
+
   useEffect(() => {
     const element = messageRef.current;
-    element.scrollIntoView({ behaviour: "smooth" });
+    element.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   return (
@@ -22,18 +23,14 @@ const Message = ({ msg }) => {
             : "message_wrapper"
         }
       >
-        <img
-          className="user_image"
-          src="https://akns-images.eonline.com/eol_images/Entire_Site/2022620/rs_1200x1200-220720071814-1200-Jennie-Kim-KD-072022.jpg?fit=around%7C1200:1200&output-quality=90&crop=1200:1200;center,top"
-          alt=""
-        />
+        <img className="user_image" src={msg.messageOwnerPhotoURL} alt="" />
         <div
           className={
             uid === msg.messageOwnerId ? "message_info owner" : "message_info"
           }
         >
           {msg.photoMessageURL ? <ImageMessage msg={msg} /> : null}
-          <MessageInfo msg={msg} />
+          {msg.letterMessage ? <MessageInfo msg={msg} /> : null}
         </div>
       </div>
     </div>

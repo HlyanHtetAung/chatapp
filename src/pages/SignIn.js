@@ -31,6 +31,7 @@ const SignIn = () => {
           displayName: user.user.displayName,
           email: user.user.email,
           uid: user.user.uid,
+          photoURL: user.user.photoURL,
         })
       );
       navigate("/");

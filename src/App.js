@@ -32,18 +32,19 @@ function App() {
 
   // Set user when user is already logged in
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
         dispatch(
           login({
             displayName: user.displayName,
             email: user.email,
             uid: user.uid,
+            photoURL: user.photoURL,
           })
         );
       }
     });
-  }, [dispatch]);
+  }, [displayName, dispatch]);
 
   return (
     <BrowserRouter>

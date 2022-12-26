@@ -6,13 +6,15 @@ const userSlice = createSlice({
     displayName: "",
     email: "",
     uid: "",
+    photoURL: "",
   },
   reducers: {
     login: (state, action) => {
-      const { displayName, email, uid } = action.payload;
+      const { displayName, email, uid, photoURL } = action.payload;
       state.displayName = displayName;
       state.email = email;
       state.uid = uid;
+      state.photoURL = photoURL;
     },
     logout: (state) => {
       state.displayName = "";
