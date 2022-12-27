@@ -5,9 +5,7 @@ import Emojis from "../Emojis/Emojis";
 import "./imageMessage.scss";
 
 const ImageMessage = ({ msg }) => {
-  const [selectedEmoji, setSelectedEmoji] = useState("");
   const [click, setClick] = useState(false);
-
   const imageContainerRef = useRef();
 
   useEffect(() => {
@@ -28,11 +26,7 @@ const ImageMessage = ({ msg }) => {
           onClick={() => setClick((prev) => !prev)}
         />
       </div>
-      <Emojis
-        click={click}
-        setSelectedEmoji={setSelectedEmoji}
-        selectedEmoji={selectedEmoji}
-      />
+      <Emojis click={click} msg={msg} />
     </>
   );
 };

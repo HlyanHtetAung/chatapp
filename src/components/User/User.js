@@ -8,7 +8,6 @@ import "./user.scss";
 
 const User = ({ displayName, usr }) => {
   const { uid } = useSelector((state) => state.user);
-  const { selectedUserFriend } = useSelector((state) => state.selectedFriend);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

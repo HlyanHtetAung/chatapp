@@ -5,7 +5,7 @@
   height: calc(100vh - 110px);
   padding: 0 20px;
   overflow: scroll;
-
+  z-index: 998;
   .scroll_to_bottom_icon {
     position: fixed;
     width: 40px;
@@ -13,7 +13,7 @@
     color: $hilight-color;
     bottom: 70px;
     cursor: pointer;
-    z-index: 10000;
+    z-index: 999;
   }
   h1 {
     color: $normal-font-color;

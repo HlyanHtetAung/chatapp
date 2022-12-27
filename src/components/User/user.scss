@@ -1,7 +1,7 @@
 @import "../../scssVariables.scss";
 
 @mixin fourEighty {
-  @media screen and (max-width: 480px) {
+  @media screen and (max-width: 1000px) {
     @content;
   }
 }
@@ -41,18 +41,19 @@
     width: 100%;
     line-height: 20px;
     color: $normal-font-color;
-
+    z-index: 999;
     @include fourEighty() {
       position: absolute;
       width: max-content;
       left: 90%;
-      background-color: $hilight-color;
-      padding: 10px 3px;
+      background-color: $dark-background-color;
+      padding: 10px 20px;
       border-radius: 9px;
-      color: white;
+      color: $hilight-color !important;
       opacity: 0;
       pointer-events: none;
-      z-index: 999;
+
+      font-weight: 400;
     }
   }
 

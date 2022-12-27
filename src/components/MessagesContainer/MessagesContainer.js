@@ -56,7 +56,6 @@ const MessagesContainer = () => {
       {messages?.messages?.map((msg) => (
         <Message msg={msg} key={msg.messageId} />
       ))}
-
       {showArrowIcon ? (
         <BsFillArrowDownCircleFill
           className="scroll_to_bottom_icon"

@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { BsCameraVideo, BsEmojiLaughing } from "react-icons/bs";
+import { RxCross2 } from "react-icons/rx";
 import { FiPhoneCall } from "react-icons/fi";
 import { AiFillPicture } from "react-icons/ai";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
@@ -15,6 +16,7 @@ const Home = () => {
   const { theme } = useSelector((state) => state.theme);
   const { selectedUserFriend } = useSelector((state) => state.selectedFriend);
   const [textMessageInput, setTextMessageInput] = useState("");
+  const [loading, setLoading] = useState(false);
   const [textImage, setTextImage] = useState({
     textImageFile: "",
     textImageURL: "",
@@ -24,15 +26,17 @@ const Home = () => {
   const inputImageRef = useRef();
 
   const addnewMessageHandle = async () => {
+    if (!textMessageInput && !textImage.textImageURL) {
+      return;
+    }
+
     const chatId =
       uid > selectedUserFriend.uid
         ? uid + selectedUserFriend.uid
         : selectedUserFriend.uid + uid;
 
-    if (!textMessageInput && !textImage.textImageURL) {
-      return;
-    }
     if (textMessageInput && textImage.textImageURL) {
+      setLoading(true);
       try {
         const uploadTask = uploadBytesResumable(
           ref(storage, `chatImages/${chatId + v4()}`),
@@ -49,11 +53,13 @@ const Home = () => {
 
               selectedEmoji: [
                 {
-                  emojiOwnerId: "",
+                  emojiOwnerPhotoURL: photoURL,
+                  emojiOwnerId: uid,
                   emojiName: "",
                 },
                 {
-                  emojiOwnerId: "",
+                  emojiOwnerPhotoURL: selectedUserFriend.photoURL,
+                  emojiOwnerId: selectedUserFriend.uid,
                   emojiName: "",
                 },
               ],
@@ -61,6 +67,7 @@ const Home = () => {
             await updateDoc(doc(db, "chats", chatId), {
               messages: arrayUnion(newMessage),
             });
+            setLoading(false);
           });
           setTextMessageInput("");
           setTextImage({ textImageFile: "", textImageURL: "" });
@@ -71,6 +78,7 @@ const Home = () => {
       return;
     }
     if (textMessageInput) {
+      setLoading(true);
       const newMessage = {
         messageId: v4(),
         messageOwnerId: uid,
@@ -79,11 +87,13 @@ const Home = () => {
         photoMessageURL: "",
         selectedEmoji: [
           {
-            emojiOwnerId: "",
+            emojiOwnerPhotoURL: photoURL,
+            emojiOwnerId: uid,
             emojiName: "",
           },
           {
-            emojiOwnerId: "",
+            emojiOwnerPhotoURL: selectedUserFriend.photoURL,
+            emojiOwnerId: selectedUserFriend.uid,
             emojiName: "",
           },
         ],
@@ -91,12 +101,15 @@ const Home = () => {
       await updateDoc(doc(db, "chats", chatId), {
         messages: arrayUnion(newMessage),
       });
+      setLoading(false);
       setTextMessageInput("");
       setTextImage({ textImageFile: "", textImageURL: "" });
       return;
     }
 
     if (textImage.textImageURL) {
+      setLoading(true);
+
       try {
         const uploadTask = uploadBytesResumable(
           ref(storage, `chatImages/${chatId + v4()}`),
@@ -112,11 +125,13 @@ const Home = () => {
               photoMessageURL: downloadURL,
               selectedEmoji: [
                 {
-                  emojiOwnerId: "",
+                  emojiOwnerPhotoURL: photoURL,
+                  emojiOwnerId: uid,
                   emojiName: "",
                 },
                 {
-                  emojiOwnerId: "",
+                  emojiOwnerPhotoURL: selectedUserFriend.photoURL,
+                  emojiOwnerId: selectedUserFriend.uid,
                   emojiName: "",
                 },
               ],
@@ -124,6 +139,7 @@ const Home = () => {
             await updateDoc(doc(db, "chats", chatId), {
               messages: arrayUnion(newMessage),
             });
+            setLoading(false);
           });
           setTextMessageInput("");
           setTextImage({ textImageFile: "", textImageURL: "" });
@@ -155,6 +171,26 @@ const Home = () => {
           </div>
           <MessagesContainer />
           <div className="messages_input_container">
+            {loading ? (
+              <div className="sending_loading_container">
+                <h3>Sending</h3>
+                <div className="loading_circle_container"></div>
+              </div>
+            ) : null}
+            {textImage.textImageURL ? (
+              <div className="uploadImage_container">
+                <RxCross2
+                  className="remove_image_icon"
+                  onClick={() => {
+                    setTextImage({
+                      textImageFile: "",
+                      textImageURL: "",
+                    });
+                  }}
+                />
+                <img className="uploadImage" src={textImage.textImageURL} />
+              </div>
+            ) : null}
             <input
               placeholder="Message..."
               value={textMessageInput}
@@ -181,7 +217,7 @@ const Home = () => {
                   inputImageRef.current.click();
                 }}
               />
-              <BsEmojiLaughing className="input_container_icon" />
+              {/* <BsEmojiLaughing className="input_container_icon" /> */}
             </div>
             <button onClick={addnewMessageHandle}>Send</button>
           </div>
