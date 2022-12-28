@@ -1,6 +1,6 @@
 @import "../../scssVariables.scss";
 
-@mixin fourEighty {
+@mixin thousandPixel {
   @media screen and (max-width: 1000px) {
     @content;
   }
@@ -17,7 +17,7 @@
   flex-direction: column;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   z-index: 10000;
-  @include fourEighty() {
+  @include thousandPixel() {
     width: 70px;
     align-items: center;
   }
@@ -33,7 +33,7 @@
       font-size: 25px;
       font-weight: 500;
 
-      @include fourEighty() {
+      @include thousandPixel() {
         display: none;
       }
     }
@@ -61,7 +61,7 @@
 
       border-radius: 5px;
 
-      @include fourEighty() {
+      @include thousandPixel() {
         padding: 0px;
         border: none;
         justify-content: center;
@@ -70,7 +70,7 @@
       .navbar_search_icon {
         color: $normal-font-color;
 
-        @include fourEighty() {
+        @include thousandPixel() {
           padding: 0px;
           border: none;
           width: 30px;
@@ -89,7 +89,7 @@
           color: $normal-font-color;
         }
 
-        @include fourEighty() {
+        @include thousandPixel() {
           display: none;
         }
       }
@@ -116,16 +116,29 @@
       cursor: pointer;
       padding: 10px;
       border-radius: 9px;
+
+      @include thousandPixel() {
+        padding: 5px;
+        gap: 5px;
+      }
       img {
         width: 50px;
         height: 50px;
         border-radius: 50%;
         border: 1px solid $hilight-color;
+
+        @include thousandPixel() {
+          width: 40px;
+          height: 40px;
+        }
       }
 
       h3 {
         color: $normal-font-color;
         font-weight: 500;
+        @include thousandPixel() {
+          display: none;
+        }
       }
 
       &:hover {
@@ -149,7 +162,7 @@
     h3 {
       font-weight: 900;
       font-size: 20px;
-      @include fourEighty() {
+      @include thousandPixel() {
         display: none;
       }
     }

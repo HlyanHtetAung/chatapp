@@ -154,7 +154,9 @@ const Home = () => {
   return (
     <div className="home_container">
       {Object.keys(selectedUserFriend).length <= 0 ? (
-        <h3>Please select someone to chat messages</h3>
+        <div className={`select_someone_container ${theme}`}>
+          <h3>Please select someone to start conversation</h3>
+        </div>
       ) : (
         <div className={`messages_container ${theme}`}>
           <div className={`messages_navbar_wrapper ${theme}`}>

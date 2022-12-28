@@ -1,6 +1,6 @@
 @import "../../scssVariables.scss";
 
-@mixin fourEighty {
+@mixin thousandPixel {
   @media screen and (max-width: 1000px) {
     @content;
   }
@@ -13,14 +13,11 @@
   padding: 5px;
   cursor: pointer;
   border-radius: 5px;
-  @include fourEighty() {
-    &:hover {
-      p {
-        transition: opacity 0.3s ease;
-        opacity: 1;
-        pointer-events: none;
-      }
-    }
+  position: relative;
+  @include thousandPixel() {
+    flex-direction: column;
+    text-align: center;
+    gap: 3px;
   }
 
   img {
@@ -29,7 +26,7 @@
     object-fit: cover;
     border-radius: 50%;
 
-    @include fourEighty() {
+    @include thousandPixel() {
       width: 40px;
       height: 40px;
     }
@@ -42,18 +39,8 @@
     line-height: 20px;
     color: $normal-font-color;
     z-index: 999;
-    @include fourEighty() {
-      position: absolute;
-      width: max-content;
-      left: 90%;
-      background-color: $dark-background-color;
-      padding: 10px 20px;
-      border-radius: 9px;
-      color: $hilight-color !important;
-      opacity: 0;
-      pointer-events: none;
-
-      font-weight: 400;
+    @include thousandPixel() {
+      font-size: 13px;
     }
   }
 

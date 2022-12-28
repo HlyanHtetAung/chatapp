@@ -13,6 +13,7 @@ import { v4 } from "uuid";
 
 const Register = () => {
   const { theme } = useSelector((state) => state.theme);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [error, setError] = useState(false);
@@ -47,6 +48,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const uploadTask = uploadBytesResumable(
         ref(storage, `profileImages/${userInput.displayName + v4()}`),
         userInput.imageFile
@@ -70,6 +72,7 @@ const Register = () => {
             firendRequest: [],
             photoURL: user.user.photoURL,
           });
+          setLoading(false);
           setUserInput(userInputInititalState);
           navigate("/signIn");
         });
@@ -152,7 +155,9 @@ const Register = () => {
             />
             <span>Display Name</span>
           </div>
-          <button>Register</button>
+          <button>
+            Register <div className="loading_wrapper"></div>
+          </button>
         </form>
         <p>
           You already have an account?{" "}
