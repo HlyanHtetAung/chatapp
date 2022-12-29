@@ -16,7 +16,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const userInputInititalState = {
     email: "",
     password: "",
@@ -47,6 +47,15 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (!userInput.imageFile) {
+      setError("Need an image to create user");
+      const removeError = () => {
+        setError("");
+      };
+      setTimeout(removeError, 3000);
+      clearTimeout(removeError);
+      setLoading(false);
+    }
     try {
       setLoading(true);
       const uploadTask = uploadBytesResumable(
@@ -59,10 +68,29 @@ const Register = () => {
             auth,
             userInput.email,
             userInput.password
-          );
+          ).catch((error) => {
+            setLoading(false);
+            setError(error.message);
+            const removeError = () => {
+              setError("");
+            };
+            setTimeout(removeError, 3000);
+            clearTimeout(removeError);
+            return;
+          });
+
           await updateProfile(user.user, {
             displayName: userInput.displayName,
             photoURL: downloadURL,
+          }).catch((error) => {
+            setLoading(false);
+            setError(error.message);
+            const removeError = () => {
+              setError("");
+            };
+            setTimeout(removeError, 3000);
+            clearTimeout(removeError);
+            return;
           });
           await setDoc(doc(db, "users", user.user.uid), {
             uid: user.user.uid,
@@ -71,6 +99,16 @@ const Register = () => {
             friends: [],
             firendRequest: [],
             photoURL: user.user.photoURL,
+          }).catch((error) => {
+            setLoading(false);
+            setError(error.message);
+            const removeError = () => {
+              setError("");
+            };
+            setTimeout(removeError, 3000);
+            clearTimeout(removeError);
+
+            return;
           });
           setLoading(false);
           setUserInput(userInputInititalState);
@@ -111,6 +149,7 @@ const Register = () => {
           <div className="form_image_input_container">
             <div className="image_container">
               <input
+                accept="image*/"
                 type="file"
                 style={{ display: "none" }}
                 id="file"

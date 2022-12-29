@@ -239,6 +239,7 @@ const Home = () => {
             <div className="messages_icon_container">
               <input
                 disabled={loading}
+                accept="image/*"
                 type="file"
                 style={{ display: "none" }}
                 ref={inputImageRef}
