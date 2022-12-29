@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { db } from "../../firebase";
 import { setSelectedFriend } from "../../redux/selectedFriendSlice";
+import { limitWord } from "../../resuableFunctions/limitWord";
 import "./user.scss";
 
 const User = ({ displayName, usr }) => {
@@ -39,7 +40,8 @@ const User = ({ displayName, usr }) => {
   return (
     <div className="user_container" onClick={selectUserHandle}>
       <img src={usr.photoURL} alt="" />
-      <p>{displayName}</p>
+      <p className="displayName">{displayName}</p>
+      <p className="limit_displayName">{limitWord(displayName, 7)}</p>
     </div>
   );
 };

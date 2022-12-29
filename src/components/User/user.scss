@@ -31,7 +31,7 @@
       height: 40px;
     }
   }
-  p {
+  .displayName {
     flex: 1;
     font-size: 15px;
     font-weight: 500;
@@ -39,8 +39,24 @@
     line-height: 20px;
     color: $normal-font-color;
     z-index: 999;
+
     @include thousandPixel() {
-      font-size: 13px;
+      display: none;
+    }
+  }
+
+  .limit_displayName {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 500;
+    width: 100%;
+    line-height: 20px;
+    color: $normal-font-color;
+    z-index: 999;
+    display: none;
+    text-align: center;
+    @include thousandPixel() {
+      display: block;
     }
   }
 

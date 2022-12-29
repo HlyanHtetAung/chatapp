@@ -8,7 +8,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import "./emojis.scss";
 import { db } from "../../firebase";
 
-const Emojis = ({ click, msg }) => {
+const Emojis = ({ click, msg, imageEmoji }) => {
   const { uid } = useSelector((state) => state.user);
   const { selectedUserFriend } = useSelector((state) => state.selectedFriend);
 
@@ -24,6 +24,27 @@ const Emojis = ({ click, msg }) => {
     const messageDoc = await getDoc(doc(db, "chats", chatId));
 
     const copiedMesage = [...messageDoc.data().messages];
+
+    if (imageEmoji) {
+      const finalUpdatedMessage = copiedMesage.map((message) => {
+        if (message.messageId === msg.messageId) {
+          return {
+            ...message,
+            selectedImageEmoji: message.selectedImageEmoji.map((emoji) => {
+              if (emoji.emojiOwnerId === uid) {
+                return { ...emoji, emojiName: iconName };
+              }
+              return emoji;
+            }),
+          };
+        }
+        return message;
+      });
+
+      await updateDoc(messageRef, {
+        messages: finalUpdatedMessage,
+      });
+    }
     const finalUpdatedMessage = copiedMesage.map((message) => {
       if (message.messageId === msg.messageId) {
         return {
@@ -97,7 +118,38 @@ const Emojis = ({ click, msg }) => {
           onClick={() => handleSelectEmoji("BiAngry")}
         />
       </div>
-      {msg.messageOwnerId === uid
+
+      {imageEmoji
+        ? msg.messageOwnerId === uid
+          ? msg.selectedImageEmoji?.map((emoji) =>
+              emoji.emojiName === "AiOutlineHeart" ? (
+                <AiOutlineHeart
+                  className="selected_emoji"
+                  key={emoji.emojiOwnerId}
+                />
+              ) : emoji.emojiName === "BsHandThumbsUp" ? (
+                <BsHandThumbsUp
+                  className="selected_emoji"
+                  key={emoji.emojiOwnerId}
+                />
+              ) : emoji.emojiName === "BiHappyHeartEyes" ? (
+                <BiHappyHeartEyes
+                  className="selected_emoji"
+                  key={emoji.emojiOwnerId}
+                />
+              ) : emoji.emojiName === "BiSad" ? (
+                <BiSad className="selected_emoji" key={emoji.emojiOwnerId} />
+              ) : (
+                emoji.emojiName === "BiAngry" && (
+                  <BiAngry
+                    className="selected_emoji"
+                    key={emoji.emojiOwnerId}
+                  />
+                )
+              )
+            )
+          : null
+        : msg.messageOwnerId === uid
         ? msg.selectedEmoji?.map((emoji) =>
             emoji.emojiName === "AiOutlineHeart" ? (
               <AiOutlineHeart

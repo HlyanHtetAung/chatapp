@@ -26,7 +26,7 @@ const ImageMessage = ({ msg }) => {
           onClick={() => setClick((prev) => !prev)}
         />
       </div>
-      <Emojis click={click} msg={msg} />
+      <Emojis click={click} msg={msg} ImageEmoji />
     </>
   );
 };

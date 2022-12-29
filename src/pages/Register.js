@@ -79,6 +79,14 @@ const Register = () => {
       });
     } catch (err) {
       setError(err.message);
+      setLoading(false);
+
+      const removeError = () => {
+        setError("");
+      };
+
+      setTimeout(removeError, 3000);
+      clearTimeout(removeError);
     }
   };
 
@@ -156,14 +164,16 @@ const Register = () => {
             <span>Display Name</span>
           </div>
           <button>
-            Register <div className="loading_wrapper"></div>
+            Register {loading ? <div className="loading_wrapper"></div> : null}
           </button>
         </form>
         <p>
           You already have an account?{" "}
           <span onClick={() => navigate("/")}>Sign In</span>
         </p>
-        {error ? <span>{error}</span> : null}
+        {error ? (
+          <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>
+        ) : null}
       </div>
     </div>
   );

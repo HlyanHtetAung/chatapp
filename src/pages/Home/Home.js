@@ -63,6 +63,18 @@ const Home = () => {
                   emojiName: "",
                 },
               ],
+              selectedImageEmoji: [
+                {
+                  emojiOwnerPhotoURL: photoURL,
+                  emojiOwnerId: uid,
+                  emojiName: "",
+                },
+                {
+                  emojiOwnerPhotoURL: selectedUserFriend.photoURL,
+                  emojiOwnerId: selectedUserFriend.uid,
+                  emojiName: "",
+                },
+              ],
             };
             await updateDoc(doc(db, "chats", chatId), {
               messages: arrayUnion(newMessage),
@@ -86,6 +98,18 @@ const Home = () => {
         letterMessage: textMessageInput,
         photoMessageURL: "",
         selectedEmoji: [
+          {
+            emojiOwnerPhotoURL: photoURL,
+            emojiOwnerId: uid,
+            emojiName: "",
+          },
+          {
+            emojiOwnerPhotoURL: selectedUserFriend.photoURL,
+            emojiOwnerId: selectedUserFriend.uid,
+            emojiName: "",
+          },
+        ],
+        selectedImageEmoji: [
           {
             emojiOwnerPhotoURL: photoURL,
             emojiOwnerId: uid,
@@ -124,6 +148,18 @@ const Home = () => {
               letterMessage: "",
               photoMessageURL: downloadURL,
               selectedEmoji: [
+                {
+                  emojiOwnerPhotoURL: photoURL,
+                  emojiOwnerId: uid,
+                  emojiName: "",
+                },
+                {
+                  emojiOwnerPhotoURL: selectedUserFriend.photoURL,
+                  emojiOwnerId: selectedUserFriend.uid,
+                  emojiName: "",
+                },
+              ],
+              selectedImageEmoji: [
                 {
                   emojiOwnerPhotoURL: photoURL,
                   emojiOwnerId: uid,
@@ -194,6 +230,7 @@ const Home = () => {
               </div>
             ) : null}
             <input
+              disabled={loading}
               placeholder="Message..."
               value={textMessageInput}
               onChange={(e) => setTextMessageInput(e.target.value)}
@@ -201,6 +238,7 @@ const Home = () => {
             />
             <div className="messages_icon_container">
               <input
+                disabled={loading}
                 type="file"
                 style={{ display: "none" }}
                 ref={inputImageRef}
@@ -221,7 +259,9 @@ const Home = () => {
               />
               {/* <BsEmojiLaughing className="input_container_icon" /> */}
             </div>
-            <button onClick={addnewMessageHandle}>Send</button>
+            <button disabled={loading} onClick={addnewMessageHandle}>
+              Send
+            </button>
           </div>
         </div>
       )}

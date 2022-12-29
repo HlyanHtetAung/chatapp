@@ -12,13 +12,14 @@ import { login } from "../redux/userSlice";
 const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const { theme } = useSelector((state) => state.theme);
-
+  const [error, setError] = useState("");
   const userInputIntitalState = { email: "", password: "" };
-
   const [userInput, setUserInput] = useState(userInputIntitalState);
 
   const handleSignIn = async (e) => {
+    setLoading(true);
     e.preventDefault();
     try {
       const user = await signInWithEmailAndPassword(
@@ -34,9 +35,18 @@ const SignIn = () => {
           photoURL: user.user.photoURL,
         })
       );
+      setLoading(false);
       navigate("/");
     } catch (err) {
-      console.log(err.message);
+      console.log(err);
+      setError(err.message);
+      setLoading(false);
+
+      const removeError = () => {
+        setError("");
+      };
+      setTimeout(removeError, 3000);
+      clearTimeout(removeError);
     }
   };
 
@@ -89,12 +99,17 @@ const SignIn = () => {
             />
             <span>Password</span>
           </div>
-          <button>Sign In</button>
+          <button>
+            Sign In {loading ? <div className="loading_wrapper"></div> : null}
+          </button>
         </form>
         <p>
           Don't you have an account?{" "}
           <span onClick={() => navigate("/register")}>Register</span>
         </p>
+        {error ? (
+          <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>
+        ) : null}
       </div>
     </div>
   );

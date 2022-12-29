@@ -1,6 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
 @import "./scssVariables.scss";
 
+@mixin fourHundredPixel {
+  @media screen and (max-width: 400px) {
+    @content;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -38,10 +44,13 @@ html {
       background-color: $light-form-color;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-
+      gap: 25px;
       width: 400px;
       box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+      @include fourHundredPixel() {
+        width: 95vw;
+      }
       .form_header_wrapper {
         display: flex;
         align-items: center;
@@ -176,10 +185,13 @@ html {
       background-color: $dark-form-color;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-
+      gap: 25px;
       width: 400px;
       box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+      @include fourHundredPixel() {
+        width: 95vw;
+      }
       .form_header_wrapper {
         display: flex;
         align-items: center;
